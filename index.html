@@ -235,7 +235,7 @@ textarea { width:100%; padding:10px; border-radius:10px; }
   <p style="color:#aaa; font-size:13px; margin-top:20px;">K J Somaiya Institute of Technology · Department of Computer Engineering</p>
 </div>
 
-<div id="langPage" style="display:none; min-height:90vh; background:linear-gradient(135deg,#fff5f5 0%,#fff 60%,#f5f5ff 100%); display:none; flex-direction:column; align-items:center; justify-content:center; padding:40px 20px; text-align:center;">
+<div id="langPage" style="display:none; min-height:90vh; background:linear-gradient(135deg,#fff5f5 0%,#fff 60%,#f5f5ff 100%); flex-direction:column; align-items:center; justify-content:center; padding:40px 20px; text-align:center;">
   <h1 style="color:#8E1D2F; font-size:36px; margin-bottom:8px;">Choose a Language</h1>
   <p style="color:#888; margin-bottom:36px; font-size:16px;">Select a programming language to start your experiments</p>
   <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:20px; max-width:750px; margin-bottom:40px;">
@@ -526,7 +526,7 @@ let currentModuleType = '';
 /* NAVIGATION */
 function goToLang(){
     welcomePage.style.display="none";
-    langPage.style.display="block";
+    langPage.style.display="flex";
     labPage.style.display="none";
 }
 
