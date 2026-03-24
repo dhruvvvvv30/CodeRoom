@@ -265,7 +265,6 @@ textarea { width:100%; padding:10px; border-radius:10px; }
 <!-- COMPILER -->
 <div id="compiler" class="section">
 <h2 style="color:#8E1D2F;">Python Compiler</h2>
-
 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
     <span style="font-size:13px; color:#666; font-family:'Fira Code',monospace;">🐍 Python 3</span>
     <div style="display:flex; gap:8px;">
@@ -273,24 +272,16 @@ textarea { width:100%; padding:10px; border-radius:10px; }
         <button class="btn" style="padding:8px 18px; font-size:13px; background:#2d6a2d;" onclick="runCode()">▶ Run</button>
     </div>
 </div>
-
-<textarea id="code" class="editor" spellcheck="false" style="height:220px; font-family:'Fira Code',monospace; font-size:14px; background:#1e1e1e; color:#d4d4d4; border:1px solid #444; resize:vertical;">print("Hello, World!")
-
-# Try writing your own Python code here
-name = "CodeRoom"
-print(f"Welcome to {name}!")
-</textarea>
-
+<textarea id="code" class="editor" spellcheck="false" style="height:220px; font-family:'Fira Code',monospace; font-size:14px; background:#1e1e1e; color:#d4d4d4; border:1px solid #444; resize:vertical;">print("Hello, World!")</textarea>
 <div style="margin-top:10px;">
     <div style="display:flex; justify-content:space-between; align-items:center; background:#111; padding:8px 12px; border-radius:8px 8px 0 0; border-bottom:1px solid #333;">
         <span style="color:#aaa; font-size:12px; font-family:'Fira Code',monospace;">Output</span>
         <button onclick="clearOutput()" style="background:none; border:none; color:#666; cursor:pointer; font-size:12px;">✕ Clear</button>
     </div>
-    <div id="output" class="output" style="border-radius:0 0 8px 8px; min-height:80px; position:relative;">
+    <div id="output" class="output" style="border-radius:0 0 8px 8px; min-height:80px;">
         <span id="outputPlaceholder" style="color:#555; font-style:italic;">Run your code to see output here...</span>
     </div>
 </div>
-
 <div id="compilerStatus" style="margin-top:6px; font-size:12px; color:#888; font-family:'Fira Code',monospace;"></div>
 </div>
 
@@ -774,85 +765,78 @@ function fileDownload() {
     document.getElementById("fileOutput").textContent = "File downloaded as " + currentFilename;
 }
 
-/* ---- COMPILER (Piston API - Real Python Execution) ---- */
+/* ---- COMPILER ---- */
 async function runCode() {
     const code = document.getElementById("code").value.trim();
     const outputDiv = document.getElementById("output");
     const statusDiv = document.getElementById("compilerStatus");
     const placeholder = document.getElementById("outputPlaceholder");
 
-    if (!code) {
-        outputDiv.innerHTML = '<span style="color:#ff6b6b;">⚠ No code to run.</span>';
-        return;
-    }
+    if (!code) { outputDiv.innerHTML = '<span style="color:#ff6b6b;">⚠ No code to run.</span>'; return; }
 
-    // Show loading state
-    placeholder && (placeholder.style.display = "none");
-    outputDiv.innerHTML = '<span style="color:#aaa; animation: pulse 1s infinite;">⏳ Running...</span>';
-    statusDiv.textContent = "Sending to Python runtime...";
-
+    if (placeholder) placeholder.style.display = "none";
+    outputDiv.innerHTML = '<span style="color:#aaa;">⏳ Running...</span>';
+    statusDiv.textContent = "Connecting to Python runtime...";
     const startTime = Date.now();
 
-    try {
-        const response = await fetch("https://emkc.org/api/v2/piston/execute", {
+    // Try Piston API (works on GitHub Pages)
+    const apis = [
+        () => fetch("https://emkc.org/api/v2/piston/execute", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                language: "python",
-                version: "3.10.0",
-                files: [{ name: "main.py", content: code }],
-                stdin: "",
-                args: [],
-                compile_timeout: 10000,
-                run_timeout: 5000
-            })
-        });
+            body: JSON.stringify({ language: "python", version: "3.10.0", files: [{ name: "main.py", content: code }] })
+        }).then(async r => {
+            if (!r.ok) throw new Error("piston_fail");
+            const d = await r.json();
+            return { stdout: d.run?.stdout || "", stderr: d.run?.stderr || "" };
+        }),
+        () => fetch("https://api.jdoodle.com/v1/execute", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ script: code, language: "python3", versionIndex: "3", clientId: "guest", clientSecret: "guest" })
+        }).then(async r => {
+            if (!r.ok) throw new Error("jdoodle_fail");
+            const d = await r.json();
+            return { stdout: d.output || "", stderr: "" };
+        })
+    ];
 
-        if (!response.ok) throw new Error(`Server error: ${response.status}`);
-
-        const data = await response.json();
-        const elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
-
-        const stdout = data.run?.stdout || "";
-        const stderr = data.run?.stderr || "";
-        const code_exit = data.run?.code;
-
-        if (stderr) {
-            // Error output — highlight error lines
-            const formattedErr = formatError(stderr);
-            outputDiv.innerHTML = formattedErr;
-            statusDiv.innerHTML = `<span style="color:#ff6b6b;">✗ Exited with error (${elapsed}s)</span>`;
-        } else if (stdout) {
-            outputDiv.textContent = stdout;
-            statusDiv.innerHTML = `<span style="color:#00ff88;">✓ Completed in ${elapsed}s</span>`;
-        } else {
-            outputDiv.innerHTML = '<span style="color:#aaa; font-style:italic;">(no output)</span>';
-            statusDiv.innerHTML = `<span style="color:#00ff88;">✓ Completed in ${elapsed}s</span>`;
-        }
-
-    } catch (err) {
-        outputDiv.innerHTML = `<span style="color:#ff6b6b;">⚠ Could not connect to compiler.\nCheck your internet connection.\n\n${err.message}</span>`;
-        statusDiv.innerHTML = `<span style="color:#ff6b6b;">✗ Network error</span>`;
+    for (const apiFn of apis) {
+        try {
+            const { stdout, stderr } = await apiFn();
+            const elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
+            if (stderr) {
+                outputDiv.innerHTML = formatError(stderr);
+                statusDiv.innerHTML = `<span style="color:#ff6b6b;">✗ Error (${elapsed}s)</span>`;
+            } else if (stdout) {
+                outputDiv.textContent = stdout;
+                statusDiv.innerHTML = `<span style="color:#00ff88;">✓ Completed in ${elapsed}s</span>`;
+            } else {
+                outputDiv.innerHTML = '<span style="color:#aaa; font-style:italic;">(no output)</span>';
+                statusDiv.innerHTML = `<span style="color:#00ff88;">✓ Completed in ${elapsed}s</span>`;
+            }
+            return;
+        } catch (e) { continue; }
     }
+
+    outputDiv.innerHTML = `<span style="color:#ff6b6b;">⚠ Could not reach compiler.\nMake sure you are connected to the internet.</span>`;
+    statusDiv.innerHTML = `<span style="color:#ff6b6b;">✗ Network error</span>`;
 }
 
 function formatError(stderr) {
-    // Color-code error lines
     return stderr.split('\n').map(line => {
-        if (line.startsWith('  File') || line.includes('line ')) {
-            return `<span style="color:#ffd700;">${escapeHtml(line)}</span>`;
-        } else if (/Error:|Exception:|Traceback/.test(line)) {
+        if (/Error:|Exception:|Traceback/.test(line))
             return `<span style="color:#ff6b6b; font-weight:bold;">${escapeHtml(line)}</span>`;
-        } else if (line.trim().startsWith('^') || line.trim().startsWith('~')) {
+        if (line.startsWith('  File') || line.includes('line '))
+            return `<span style="color:#ffd700;">${escapeHtml(line)}</span>`;
+        if (line.trim().startsWith('^') || line.trim().startsWith('~'))
             return `<span style="color:#ff9966;">${escapeHtml(line)}</span>`;
-        } else {
-            return `<span style="color:#ffaa66;">${escapeHtml(line)}</span>`;
-        }
+        return `<span style="color:#ffaa66;">${escapeHtml(line)}</span>`;
     }).join('\n');
 }
 
-function escapeHtml(text) {
-    return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function escapeHtml(t) {
+    return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 function clearCode() {
@@ -861,10 +845,8 @@ function clearCode() {
 }
 
 function clearOutput() {
-    const outputDiv = document.getElementById("output");
-    const placeholder = document.getElementById("outputPlaceholder");
-    outputDiv.textContent = "";
-    if (placeholder) { placeholder.style.display = "inline"; outputDiv.appendChild(placeholder); }
+    const o = document.getElementById("output");
+    o.innerHTML = '<span id="outputPlaceholder" style="color:#555; font-style:italic;">Run your code to see output here...</span>';
     document.getElementById("compilerStatus").textContent = "";
 }
 
