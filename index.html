@@ -46,6 +46,7 @@ body { font-family:Roboto; margin:0; background:#f5f5f5; }
     color:white;
     border:none;
     border-radius:8px;
+    cursor:pointer;
 }
 
 /* LAB */
@@ -59,6 +60,7 @@ body { font-family:Roboto; margin:0; background:#f5f5f5; }
     width:100%;
     margin-bottom:10px;
     padding:12px;
+    cursor:pointer;
 }
 .content { flex:1; padding:20px; }
 
@@ -117,7 +119,7 @@ body { font-family:Roboto; margin:0; background:#f5f5f5; }
 
 textarea { width:100%; padding:10px; border-radius:10px; }
 
-/* ---- EXPERIMENT STEP PANELS (from Virtual Lab) ---- */
+/* ---- EXPERIMENT STEP PANELS ---- */
 .step-panel {
     background-color: #ffffff;
     padding: 20px;
@@ -195,42 +197,36 @@ textarea { width:100%; padding:10px; border-radius:10px; }
 
 <body>
 
-<!-- HEADER -->
 <div class="header">
-<img src="/home/dhruv/Desktop/logo.jpeg">
+<img src="logo1.jpg">
 <div class="title">CodeRoom</div>
-<img src="/home/dhruv/Desktop/logo1.png">
+<img src="logo2.jpg">
 </div>
 
-<!-- ================= WELCOME ================= -->
 <div id="welcomePage" class="center">
 <h1 style="color:#8E1D2F;">Welcome!</h1>
 <p>Interactive experiments for a stellar learning journey!</p>
 <button class="btn" onclick="goToLang()">Let's Learn</button>
 </div>
 
-<!-- ================= LANGUAGE ================= -->
 <div id="langPage" class="center">
 <h1>Select Language</h1>
 
-<button class="lang-btn" onclick="openLab()">Python</button>
-<button class="lang-btn" onclick="alert('Coming Soon')">Java</button>
-<button class="lang-btn" onclick="alert('Coming Soon')">C</button>
-<button class="lang-btn" onclick="alert('Coming Soon')">JavaScript</button>
-<button class="lang-btn" onclick="alert('Coming Soon')">C++</button>
+<button class="lang-btn" onclick="openLab('python')">Python</button>
+<button class="lang-btn" onclick="openLab('java')">Java</button>
+<button class="lang-btn" onclick="openLab('c')">C</button>
+<button class="lang-btn" onclick="openLab('js')">JavaScript</button>
+<button class="lang-btn" onclick="openLab('cpp')">C++</button>
 
 <br><br>
-<button onclick="goBackHome()">⬅ Back</button>
+<button class="btn" onclick="goBackHome()">⬅ Back</button>
 </div>
 
-<!-- ================= LAB ================= -->
 <div id="labPage">
-
-<button onclick="goToLang()">⬅ Back</button>
+<button class="btn" style="margin: 10px;" onclick="goToLang()">⬅ Back to Languages</button>
 
 <div class="container">
 
-<!-- SIDEBAR -->
 <div class="sidebar">
 <button onclick="showSection('intro')">Introduction</button>
 <button onclick="showSection('list')">Experiments</button>
@@ -238,16 +234,13 @@ textarea { width:100%; padding:10px; border-radius:10px; }
 <button onclick="showSection('feedback')">Feedback</button>
 </div>
 
-<!-- CONTENT -->
 <div class="content">
 
-<!-- INTRO -->
 <div id="intro" class="section active">
-<h2 style="color:#8E1D2F;">Introduction</h2>
-<p>Learn Python with interactive experiments and a mini compiler.</p>
+<h2 id="introTitle" style="color:#8E1D2F;">Introduction</h2>
+<p id="introDesc">Learn programming with interactive experiments and a mini compiler.</p>
 </div>
 
-<!-- EXPERIMENTS LIST -->
 <div id="list" class="section">
 <h2 style="color:#8E1D2F;">Experiments</h2>
 <div class="grid">
@@ -262,30 +255,14 @@ textarea { width:100%; padding:10px; border-radius:10px; }
 </div>
 </div>
 
-<!-- COMPILER -->
 <div id="compiler" class="section">
-<h2 style="color:#8E1D2F;">Python Compiler</h2>
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-    <span style="font-size:13px; color:#666; font-family:'Fira Code',monospace;">🐍 Python 3</span>
-    <div style="display:flex; gap:8px;">
-        <button class="btn" style="padding:8px 18px; font-size:13px;" onclick="clearCode()">Clear</button>
-        <button class="btn" style="padding:8px 18px; font-size:13px; background:#2d6a2d;" onclick="runCode()">▶ Run</button>
-    </div>
-</div>
-<textarea id="code" class="editor" spellcheck="false" style="height:220px; font-family:'Fira Code',monospace; font-size:14px; background:#1e1e1e; color:#d4d4d4; border:1px solid #444; resize:vertical;">print("Hello, World!")</textarea>
-<div style="margin-top:10px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; background:#111; padding:8px 12px; border-radius:8px 8px 0 0; border-bottom:1px solid #333;">
-        <span style="color:#aaa; font-size:12px; font-family:'Fira Code',monospace;">Output</span>
-        <button onclick="clearOutput()" style="background:none; border:none; color:#666; cursor:pointer; font-size:12px;">✕ Clear</button>
-    </div>
-    <div id="output" class="output" style="border-radius:0 0 8px 8px; min-height:80px;">
-        <span id="outputPlaceholder" style="color:#555; font-style:italic;">Run your code to see output here...</span>
-    </div>
-</div>
-<div id="compilerStatus" style="margin-top:6px; font-size:12px; color:#888; font-family:'Fira Code',monospace;"></div>
+<h2 id="compilerTitle" style="color:#8E1D2F;">Compiler</h2>
+<textarea id="code" class="editor"></textarea>
+<br><br>
+<button class="btn" onclick="runCode()">Run</button>
+<div id="output" class="output"></div>
 </div>
 
-<!-- FEEDBACK -->
 <div id="feedback" class="section">
 <h2 style="color:#8E1D2F;">Feedback</h2>
 <textarea placeholder="Enter feedback"></textarea>
@@ -293,7 +270,6 @@ textarea { width:100%; padding:10px; border-radius:10px; }
 <button class="btn">Submit</button>
 </div>
 
-<!-- ===================== EXPERIMENT: ARITHMETIC ===================== -->
 <div id="arith" class="section">
     <h2 style="color:#8E1D2F;">Basic Arithmetic</h2>
     <div class="step-panel">
@@ -302,7 +278,7 @@ textarea { width:100%; padding:10px; border-radius:10px; }
         <button onclick="generateArithmeticCode()" class="center-btn">Next</button>
     </div>
     <div class="step-panel">
-        <h3>Step 2: Python Code</h3>
+        <h3>Step 2: Code Preview</h3>
         <div id="arithmeticCode" class="python-code"></div>
     </div>
     <div class="step-panel">
@@ -313,7 +289,6 @@ textarea { width:100%; padding:10px; border-radius:10px; }
     <button class="back-exp-btn" onclick="backToList()">Back to List</button>
 </div>
 
-<!-- ===================== EXPERIMENT: STRING ===================== -->
 <div id="string" class="section">
     <h2 style="color:#8E1D2F;">String Operations</h2>
     <div class="step-panel">
@@ -330,7 +305,7 @@ textarea { width:100%; padding:10px; border-radius:10px; }
             <button onclick="generateStringCode()" class="center-btn">Next</button>
         </div>
         <div class="step-panel">
-            <h3>Step 3: Python Code</h3>
+            <h3>Step 3: Code Preview</h3>
             <div id="stringCode" class="python-code"></div>
         </div>
         <div class="step-panel">
@@ -342,7 +317,6 @@ textarea { width:100%; padding:10px; border-radius:10px; }
     <button class="back-exp-btn" onclick="backToList()">Back to List</button>
 </div>
 
-<!-- ===================== EXPERIMENT: CONDITIONAL ===================== -->
 <div id="cond" class="section">
     <h2 style="color:#8E1D2F;">Conditional Statements</h2>
     <div class="step-panel">
@@ -359,7 +333,7 @@ textarea { width:100%; padding:10px; border-radius:10px; }
             <button onclick="generateConditionalCode()" class="center-btn">Next</button>
         </div>
         <div class="step-panel">
-            <h3>Step 3: Python Code</h3>
+            <h3>Step 3: Code Preview</h3>
             <div id="conditionalCode" class="python-code"></div>
         </div>
         <div class="step-panel">
@@ -371,7 +345,6 @@ textarea { width:100%; padding:10px; border-radius:10px; }
     <button class="back-exp-btn" onclick="backToList()">Back to List</button>
 </div>
 
-<!-- ===================== EXPERIMENT: LOOPS ===================== -->
 <div id="loop" class="section">
     <h2 style="color:#8E1D2F;">Loops</h2>
     <div class="step-panel">
@@ -379,7 +352,6 @@ textarea { width:100%; padding:10px; border-radius:10px; }
         <div class="type-selector">
             <button onclick="selectLoopType('for')">For Loop</button>
             <button onclick="selectLoopType('while')">While Loop</button>
-            <button onclick="selectLoopType('do-while')">Do-While (Simulated)</button>
         </div>
     </div>
     <div id="loopsExampleSection" class="hidden">
@@ -388,8 +360,6 @@ textarea { width:100%; padding:10px; border-radius:10px; }
             <div class="type-selector">
                 <button onclick="selectLoopExample('sequence')">Number Sequence</button>
                 <button onclick="selectLoopExample('pyramid')">Pyramid</button>
-                <button onclick="selectLoopExample('factorial')">Factorial</button>
-                <button onclick="selectLoopExample('fibonacci')">Fibonacci</button>
             </div>
         </div>
     </div>
@@ -400,7 +370,7 @@ textarea { width:100%; padding:10px; border-radius:10px; }
             <button onclick="generateLoopCode()" class="center-btn">Next</button>
         </div>
         <div class="step-panel">
-            <h3>Step 4: Python Code</h3>
+            <h3>Step 4: Code Preview</h3>
             <div id="loopCode" class="python-code"></div>
         </div>
         <div class="step-panel">
@@ -412,50 +382,35 @@ textarea { width:100%; padding:10px; border-radius:10px; }
     <button class="back-exp-btn" onclick="backToList()">Back to List</button>
 </div>
 
-<!-- ===================== EXPERIMENT: CLASSES ===================== -->
 <div id="classes" class="section">
     <h2 style="color:#8E1D2F;">Classes and Objects</h2>
     <div class="step-panel">
-        <h3>Python Code</h3>
-        <div class="python-code">class Dog:
-    def bark(self):
-        print("woof!")
-my_dog = Dog()
-my_dog.bark()</div>
+        <h3>Code Preview</h3>
+        <div id="classCodeDisplay" class="python-code"></div>
     </div>
     <div class="step-panel">
         <h3>Output</h3>
-        <div class="output">woof!</div>
+        <div id="classOutputDisplay" class="output"></div>
     </div>
     <button class="back-exp-btn" onclick="backToList()">Back to List</button>
 </div>
 
-<!-- ===================== EXPERIMENT: MODULES ===================== -->
 <div id="modules" class="section">
-    <h2 style="color:#8E1D2F;">Built-in Modules</h2>
+    <h2 style="color:#8E1D2F;">Built-in Modules / Libraries</h2>
     <div class="step-panel">
         <h3>Step 1: Select Module</h3>
         <div class="type-selector">
-            <button onclick="selectModuleType('random')">Random Module</button>
             <button onclick="selectModuleType('math')">Math Module</button>
         </div>
     </div>
     <div id="modulesInteractiveSection" class="hidden">
         <div class="step-panel">
             <h3 id="moduleInputHeader">Step 2: Enter Input</h3>
-            <div id="randomInputs">
-                <div class="input-group">
-                    <input type="number" id="randomMin" value="1" placeholder="Min Value">
-                    <input type="number" id="randomMax" value="100" placeholder="Max Value">
-                </div>
-            </div>
-            <div id="mathInputs" class="hidden">
-                <input type="number" id="mathInput" value="16" placeholder="Enter a number">
-            </div>
+            <input type="number" id="mathInput" value="16">
             <button onclick="generateModuleCode()" class="center-btn">Next</button>
         </div>
         <div class="step-panel">
-            <h3>Step 3: Python Code</h3>
+            <h3>Step 3: Code Preview</h3>
             <div id="moduleCode" class="python-code"></div>
         </div>
         <div class="step-panel">
@@ -467,57 +422,40 @@ my_dog.bark()</div>
     <button class="back-exp-btn" onclick="backToList()">Back to List</button>
 </div>
 
-<!-- ===================== EXPERIMENT: INHERITANCE ===================== -->
 <div id="inheritance" class="section">
-    <h2 style="color:#8E1D2F;">Constructors &amp; Inheritance</h2>
+    <h2 style="color:#8E1D2F;">Inheritance</h2>
     <div class="step-panel">
-        <h3>Python Code</h3>
-        <div class="python-code">class Animal:
-    def speak(self):
-        print("Sound")
-class Cat(Animal):
-    def speak(self):
-        print("Meow")
-my_cat = Cat()
-my_cat.speak()</div>
+        <h3>Code Preview</h3>
+        <div id="inheritanceCodeDisplay" class="python-code"></div>
     </div>
     <div class="step-panel">
         <h3>Output</h3>
-        <div class="output">Meow</div>
+        <div id="inheritanceOutputDisplay" class="output"></div>
     </div>
     <button class="back-exp-btn" onclick="backToList()">Back to List</button>
 </div>
 
-<!-- ===================== EXPERIMENT: FILE HANDLING ===================== -->
 <div id="files" class="section">
     <h2 style="color:#8E1D2F;">File Handling</h2>
     <div class="step-panel">
-        <h3>Step 1: Upload / Edit File</h3>
-        <input type="file" id="chooseFile" accept=".txt"><br><br>
-        <textarea id="fileEditor" rows="6" placeholder="File content will appear here..."></textarea>
-    </div>
-    <div class="step-panel">
-        <h3>Step 2: Python Code &amp; Actions</h3>
+        <h3>Step 1: Code Preview</h3>
         <div id="fileCode" class="python-code"></div>
-        <div class="type-selector" style="margin-top:15px;">
-            <button onclick="fileWrite()">Write</button>
-            <button onclick="fileAppend()">Append</button>
-            <button onclick="fileRead()">Read</button>
-            <button onclick="fileDownload()">Download</button>
-        </div>
     </div>
     <div class="step-panel">
-        <h3>Step 3: Output</h3>
+        <h3>Step 2: Output Simulation</h3>
         <div id="fileOutput" class="output"></div>
     </div>
     <button class="back-exp-btn" onclick="backToList()">Back to List</button>
 </div>
 
-</div><!-- end .content -->
-</div><!-- end .container -->
-</div><!-- end #labPage -->
-
-<script>
+</div></div></div><script>
+/* ---- State Variables ---- */
+let currentLanguage = "python";
+let currentStringType = '';
+let currentConditionalType = '';
+let currentLoopType = '';
+let currentLoopExample = '';
+let currentModuleType = '';
 
 /* NAVIGATION */
 function goToLang(){
@@ -525,10 +463,29 @@ function goToLang(){
     langPage.style.display="block";
     labPage.style.display="none";
 }
-function openLab(){
+
+function openLab(lang){
+    currentLanguage = lang;
     langPage.style.display="none";
     labPage.style.display="block";
+    
+    // Update Intro and Compiler Defaults
+    const names = {'python':'Python','java':'Java','c':'C','cpp':'C++','js':'JavaScript'};
+    const codes = {
+        'python': 'print("Hello World")',
+        'java': 'public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello World");\n    }\n}',
+        'c': '#include <stdio.h>\nint main() {\n    printf("Hello World\\n");\n    return 0;\n}',
+        'cpp': '#include <iostream>\nusing namespace std;\nint main() {\n    cout << "Hello World" << endl;\n    return 0;\n}',
+        'js': 'console.log("Hello World");'
+    };
+    
+    document.getElementById("introTitle").innerText = names[lang] + " Introduction";
+    document.getElementById("compilerTitle").innerText = names[lang] + " Compiler";
+    document.getElementById("code").value = codes[lang];
+    document.getElementById("output").innerText = "";
+    showSection('intro');
 }
+
 function goBackHome(){
     langPage.style.display="none";
     welcomePage.style.display="block";
@@ -538,318 +495,180 @@ function goBackHome(){
 function showSection(id){
     document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
+    
+    // Auto-generate for static experiments
+    if(id === 'classes') generateClassCode();
+    if(id === 'inheritance') generateInheritanceCode();
+    if(id === 'files') generateFileCode();
 }
+
 function openExp(id){ showSection(id); }
 function backToList(){ showSection('list'); }
 
-/* ---- State Variables ---- */
-let currentStringType = '';
-let currentConditionalType = '';
-let currentLoopType = '';
-let currentLoopExample = '';
-let currentModuleType = '';
-
-/* ---- ARITHMETIC ---- */
+/* ---- LOGIC: ARITHMETIC ---- */
 function generateArithmeticCode() {
-    const input = document.getElementById('arithmeticInput').value;
-    document.getElementById('arithmeticCode').textContent = input ? `print(${input})` : 'Enter an expression.';
-    document.getElementById('arithmeticOutput').textContent = '';
+    const val = document.getElementById('arithmeticInput').value || "10 + 5";
+    const snippets = {
+        'python': `print(${val})`,
+        'java': `System.out.println(${val});`,
+        'c': `printf("%d\\n", ${val});`,
+        'cpp': `cout << ${val} << endl;`,
+        'js': `console.log(${val});`
+    };
+    document.getElementById('arithmeticCode').textContent = snippets[currentLanguage];
 }
 function runArithmetic() {
-    const input = document.getElementById('arithmeticInput').value;
-    const outputDiv = document.getElementById('arithmeticOutput');
-    if (!input) { outputDiv.textContent = 'Please enter an expression.'; return; }
-    try { outputDiv.textContent = eval(input); }
-    catch (e) { outputDiv.textContent = 'Error: Invalid expression.'; }
+    try { 
+        const val = eval(document.getElementById('arithmeticInput').value);
+        document.getElementById('arithmeticOutput').textContent = val;
+    } catch { document.getElementById('arithmeticOutput').textContent = "Error"; }
 }
 
-/* ---- STRING ---- */
+/* ---- LOGIC: STRINGS ---- */
 function selectStringType(type) {
     currentStringType = type;
     document.getElementById('stringsInteractiveSection').classList.remove('hidden');
-    document.getElementById('stringsInputHeader').textContent = `Step 2: Enter String for '${type}'`;
     generateStringCode();
 }
 function generateStringCode() {
     const input = document.getElementById('stringInput').value;
-    const codeDiv = document.getElementById('stringCode');
-    document.getElementById('stringOutput').textContent = '';
-    if (currentStringType) {
-        codeDiv.textContent = `my_string = "${input}"\nprint(my_string.${currentStringType}())`;
-    }
+    const method = currentStringType === 'uppercase' ? 'toUpperCase' : 'toLowerCase';
+    const pyMethod = currentStringType === 'uppercase' ? 'upper' : 'lower';
+    
+    const snips = {
+        'python': `text = "${input}"\nprint(text.${pyMethod}())`,
+        'java': `String text = "${input}";\nSystem.out.println(text.${method}());`,
+        'js': `let text = "${input}";\nconsole.log(text.${method}());`,
+        'c': `// Requires loop and toupper/tolower in C`,
+        'cpp': `string text = "${input}";\n// Requires transform() for case change`
+    };
+    document.getElementById('stringCode').textContent = snips[currentLanguage] || "// Method varies in C/C++";
 }
 function runStringOp() {
     const input = document.getElementById('stringInput').value;
-    const outputDiv = document.getElementById('stringOutput');
-    if (!currentStringType) { outputDiv.textContent = 'Please select an operation.'; return; }
-    if (currentStringType === 'uppercase') outputDiv.textContent = input.toUpperCase();
-    else if (currentStringType === 'lowercase') outputDiv.textContent = input.toLowerCase();
+    document.getElementById('stringOutput').textContent = currentStringType === 'uppercase' ? input.toUpperCase() : input.toLowerCase();
 }
 
-/* ---- CONDITIONAL ---- */
+/* ---- LOGIC: CONDITIONALS ---- */
 function selectConditionalType(type) {
     currentConditionalType = type;
     document.getElementById('conditionalsInteractiveSection').classList.remove('hidden');
     generateConditionalCode();
 }
 function generateConditionalCode() {
-    const input = document.getElementById('conditionalInput').value || 0;
-    const codeDiv = document.getElementById('conditionalCode');
-    document.getElementById('conditionalOutput').textContent = '';
-    if (!currentConditionalType) return;
-    if (currentConditionalType === 'evenOdd') {
-        codeDiv.textContent = `number = ${input}\nif number % 2 == 0:\n    print("Even")\nelse:\n    print("Odd")`;
-    } else if (currentConditionalType === 'positiveNegative') {
-        codeDiv.textContent = `number = ${input}\nif number > 0:\n    print("Positive")\nelif number < 0:\n    print("Negative")\nelse:\n    print("Zero")`;
+    const n = document.getElementById('conditionalInput').value;
+    const isEven = currentConditionalType === 'evenOdd';
+    
+    if(currentLanguage === 'python') {
+        document.getElementById('conditionalCode').textContent = isEven ? `if ${n} % 2 == 0:\n    print("Even")` : `if ${n} > 0:\n    print("Positive")`;
+    } else {
+        const out = currentLanguage === 'js' ? 'console.log' : (currentLanguage === 'java' ? 'System.out.println' : 'printf');
+        document.getElementById('conditionalCode').textContent = isEven ? `if (${n} % 2 == 0) {\n    ${out}("Even");\n}` : `if (${n} > 0) {\n    ${out}("Positive");\n}`;
     }
 }
 function runConditional() {
-    const num = parseInt(document.getElementById('conditionalInput').value);
-    const outputDiv = document.getElementById('conditionalOutput');
-    if (isNaN(num)) { outputDiv.textContent = 'Invalid number.'; return; }
-    if (currentConditionalType === 'evenOdd') {
-        outputDiv.textContent = (num % 2 === 0) ? 'Even' : 'Odd';
-    } else if (currentConditionalType === 'positiveNegative') {
-        if (num > 0) outputDiv.textContent = 'Positive';
-        else if (num < 0) outputDiv.textContent = 'Negative';
-        else outputDiv.textContent = 'Zero';
-    } else {
-        outputDiv.textContent = 'Please select a condition.';
-    }
+    const n = parseInt(document.getElementById('conditionalInput').value);
+    const isEven = currentConditionalType === 'evenOdd';
+    document.getElementById('conditionalOutput').textContent = isEven ? (n % 2 === 0 ? "Even" : "Odd") : (n > 0 ? "Positive" : "Non-positive");
 }
 
-/* ---- LOOPS ---- */
+/* ---- LOGIC: LOOPS ---- */
 function selectLoopType(type) {
     currentLoopType = type;
-    currentLoopExample = '';
     document.getElementById('loopsExampleSection').classList.remove('hidden');
-    document.getElementById('loopsInteractiveSection').classList.add('hidden');
-    document.getElementById('loopCode').textContent = '';
-    document.getElementById('loopOutput').textContent = '';
 }
-function selectLoopExample(example) {
-    currentLoopExample = example;
+function selectLoopExample(ex) {
+    currentLoopExample = ex;
     document.getElementById('loopsInteractiveSection').classList.remove('hidden');
-    const header = document.getElementById('loopInputHeader');
-    if (example === 'pyramid') header.textContent = 'Step 3: Enter number of rows';
-    else if (example === 'factorial') header.textContent = 'Step 3: Enter number for factorial';
-    else header.textContent = 'Step 3: Enter number of terms';
     generateLoopCode();
 }
 function generateLoopCode() {
-    if (!currentLoopType || !currentLoopExample) return;
-    const n = document.getElementById('loopInput').value || 5;
-    const codeDiv = document.getElementById('loopCode');
-    const examples = {
-        'for': {
-            'sequence': `n = ${n}\nfor i in range(1, n + 1):\n    print(i)`,
-            'pyramid': `n = ${n}\nfor i in range(1, n + 1):\n    print('*' * i)`,
-            'factorial': `n = ${n}\nfact = 1\nfor i in range(1, n + 1):\n    fact *= i\nprint(f"Factorial of ${n} is {fact}")`,
-            'fibonacci': `n = ${n}\na, b = 0, 1\nfor _ in range(n):\n    print(a, end=' ')\n    a, b = b, a + b`
-        },
-        'while': {
-            'sequence': `n = ${n}\ni = 1\nwhile i <= n:\n    print(i)\n    i += 1`,
-            'pyramid': `n = ${n}\ni = 1\nwhile i <= n:\n    print('*' * i)\n    i += 1`,
-            'factorial': `n = ${n}\nfact = 1\ni = 1\nwhile i <= n:\n    fact *= i\n    i += 1\nprint(f"Factorial of ${n} is {fact}")`,
-            'fibonacci': `n = ${n}\na, b = 0, 1\ncount = 0\nwhile count < n:\n    print(a, end=' ')\n    a, b = b, a + b\n    count += 1`
-        },
-        'do-while': {
-            'sequence': `n = ${n}\ni = 1\nwhile True:\n    print(i)\n    i += 1\n    if i > n:\n        break`,
-            'pyramid': `n = ${n}\ni = 1\nwhile True:\n    print('*' * i)\n    i += 1\n    if i > n:\n        break`,
-            'factorial': `n = ${n}\nfact = 1\ni = 1\nwhile True:\n    fact *= i\n    i += 1\n    if i > n:\n        break\nprint(f"Factorial of ${n} is {fact}")`,
-            'fibonacci': `n = ${n}\na, b = 0, 1\ncount = 0\nwhile True:\n    print(a, end=' ')\n    a, b = b, a + b\n    count += 1\n    if count >= n:\n        break`
-        }
-    };
-    codeDiv.textContent = examples[currentLoopType][currentLoopExample];
-    document.getElementById('loopOutput').textContent = '';
+    const n = document.getElementById('loopInput').value;
+    const py = `for i in range(1, ${n}+1):\n    print(i)`;
+    const other = `for(int i=1; i<=${n}; i++) {\n    // Print logic here\n}`;
+    document.getElementById('loopCode').textContent = currentLanguage === 'python' ? py : other;
 }
 function runLoop() {
-    if (!currentLoopExample) return;
+    let res = "";
     const n = parseInt(document.getElementById('loopInput').value);
-    const outputDiv = document.getElementById('loopOutput');
-    if (isNaN(n)) { outputDiv.textContent = 'Invalid number.'; return; }
-    let result = '';
-    if (currentLoopExample === 'sequence') {
-        for (let i = 1; i <= n; i++) result += i + '\n';
-    } else if (currentLoopExample === 'pyramid') {
-        for (let i = 1; i <= n; i++) result += '*'.repeat(i) + '\n';
-    } else if (currentLoopExample === 'factorial') {
-        let fact = 1;
-        for (let i = 1; i <= n; i++) fact *= i;
-        result = `Factorial of ${n} is ${fact}`;
-    } else if (currentLoopExample === 'fibonacci') {
-        let a = 0, b = 1;
-        for (let i = 0; i < n; i++) { result += a + ' '; [a, b] = [b, a + b]; }
-    }
-    outputDiv.textContent = result.trim();
+    for(let i=1; i<=n; i++) res += i + " ";
+    document.getElementById('loopOutput').textContent = res;
 }
 
-/* ---- MODULES ---- */
-function selectModuleType(type) {
-    currentModuleType = type;
-    document.getElementById('modulesInteractiveSection').classList.remove('hidden');
-    document.getElementById('moduleCode').textContent = '';
-    document.getElementById('moduleOutput').textContent = '';
-    if (type === 'random') {
-        document.getElementById('randomInputs').classList.remove('hidden');
-        document.getElementById('mathInputs').classList.add('hidden');
-        document.getElementById('moduleInputHeader').textContent = 'Step 2: Enter Min & Max for Random Number';
-    } else if (type === 'math') {
-        document.getElementById('randomInputs').classList.add('hidden');
-        document.getElementById('mathInputs').classList.remove('hidden');
-        document.getElementById('moduleInputHeader').textContent = 'Step 2: Enter Number for Square Root';
-    }
+/* ---- LOGIC: CLASSES ---- */
+function generateClassCode() {
+    const snips = {
+        'python': `class Animal:\n    def sound(self):\n        print("Bark")\ndog = Animal()\ndog.sound()`,
+        'java': `class Animal {\n    void sound() {\n        System.out.println("Bark");\n    }\n}\nAnimal dog = new Animal();\ndog.sound();`,
+        'js': `class Animal {\n    sound() {\n        console.log("Bark");\n    }\n}\nconst dog = new Animal();\ndog.sound();`,
+        'cpp': `class Animal {\npublic:\n    void sound() { cout << "Bark"; }\n};\nAnimal dog;\ndog.sound();`,
+        'c': `// C uses structs instead of classes\nstruct Animal { ... };`
+    };
+    document.getElementById("classCodeDisplay").textContent = snips[currentLanguage];
+    document.getElementById("classOutputDisplay").textContent = "Bark";
 }
+
+/* ---- LOGIC: INHERITANCE ---- */
+function generateInheritanceCode() {
+    const snips = {
+        'python': `class Dog(Animal):\n    pass`,
+        'java': `class Dog extends Animal { }`,
+        'js': `class Dog extends Animal { }`,
+        'cpp': `class Dog : public Animal { };`,
+        'c': `// Not applicable in C`
+    };
+    document.getElementById("inheritanceCodeDisplay").textContent = snips[currentLanguage];
+    document.getElementById("inheritanceOutputDisplay").textContent = "Success";
+}
+
+/* ---- LOGIC: MODULES ---- */
+function selectModuleType(type) { generateModuleCode(); document.getElementById('modulesInteractiveSection').classList.remove('hidden'); }
 function generateModuleCode() {
-    if (!currentModuleType) return;
-    const codeDiv = document.getElementById('moduleCode');
-    if (currentModuleType === 'random') {
-        const min = document.getElementById('randomMin').value || 1;
-        const max = document.getElementById('randomMax').value || 100;
-        codeDiv.textContent = `import random\n\nnumber = random.randint(${min}, ${max})\nprint(number)`;
-    } else if (currentModuleType === 'math') {
-        const num = document.getElementById('mathInput').value || 16;
-        codeDiv.textContent = `import math\n\nroot = math.sqrt(${num})\nprint(root)`;
-    }
+    const n = document.getElementById("mathInput").value;
+    const snips = {
+        'python': `import math\nprint(math.sqrt(${n}))`,
+        'java': `import java.lang.Math;\nSystem.out.println(Math.sqrt(${n}));`,
+        'js': `console.log(Math.sqrt(${n}));`,
+        'cpp': `#include <cmath>\ncout << sqrt(${n});`,
+        'c': `#include <math.h>\nprintf("%f", sqrt(${n}));`
+    };
+    document.getElementById("moduleCode").textContent = snips[currentLanguage];
 }
 function runModule() {
-    if (!currentModuleType) return;
-    const outputDiv = document.getElementById('moduleOutput');
-    if (currentModuleType === 'random') {
-        const min = parseInt(document.getElementById('randomMin').value);
-        const max = parseInt(document.getElementById('randomMax').value);
-        if (isNaN(min) || isNaN(max) || min > max) { outputDiv.textContent = 'Invalid min/max range.'; return; }
-        outputDiv.textContent = Math.floor(Math.random() * (max - min + 1)) + min;
-    } else if (currentModuleType === 'math') {
-        const num = parseFloat(document.getElementById('mathInput').value);
-        if (isNaN(num) || num < 0) { outputDiv.textContent = 'Invalid number (must be non-negative).'; return; }
-        outputDiv.textContent = Math.sqrt(num);
-    }
+    const n = document.getElementById("mathInput").value;
+    document.getElementById("moduleOutput").textContent = Math.sqrt(n);
 }
 
-/* ---- FILE HANDLING ---- */
-let currentFilename = "my_file.txt";
-document.getElementById("chooseFile").addEventListener("change", function () {
-    const file = this.files[0];
-    if (!file) return;
-    currentFilename = file.name;
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        document.getElementById("fileEditor").value = e.target.result;
-        document.getElementById("fileOutput").textContent = "File loaded.";
+/* ---- LOGIC: FILES ---- */
+function generateFileCode() {
+    const snips = {
+        'python': `f = open("data.txt", "r")\nprint(f.read())`,
+        'java': `File myFile = new File("data.txt");`,
+        'js': `fs.readFile("data.txt", (err, data) => { ... });`,
+        'cpp': `ifstream file("data.txt");`,
+        'c': `FILE *f = fopen("data.txt", "r");`
     };
-    reader.readAsText(file);
-});
-function fileWrite() {
-    const data = document.getElementById("fileEditor").value;
-    document.getElementById("fileCode").textContent = `with open("${currentFilename}", "w") as f:\n    f.write("""${data}""")`;
-    document.getElementById("fileOutput").textContent = "Write operation ready. Click Download to save.";
-}
-function fileAppend() {
-    const data = document.getElementById("fileEditor").value;
-    document.getElementById("fileCode").textContent = `with open("${currentFilename}", "a") as f:\n    f.write("""${data}""")`;
-    document.getElementById("fileOutput").textContent = "Append operation ready. Click Download to save.";
-}
-function fileRead() {
-    const data = document.getElementById("fileEditor").value;
-    document.getElementById("fileCode").textContent = `with open("${currentFilename}", "r") as f:\n    print(f.read())`;
-    document.getElementById("fileOutput").textContent = data || "File is empty.";
-}
-function fileDownload() {
-    const text = document.getElementById("fileEditor").value;
-    const blob = new Blob([text], { type: "text/plain" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = currentFilename;
-    a.click();
-    document.getElementById("fileOutput").textContent = "File downloaded as " + currentFilename;
+    document.getElementById("fileCode").textContent = snips[currentLanguage];
+    document.getElementById("fileOutput").textContent = "File Contents: Hello CodeRoom!";
 }
 
-/* ---- COMPILER ---- */
-async function runCode() {
-    const code = document.getElementById("code").value.trim();
-    const outputDiv = document.getElementById("output");
-    const statusDiv = document.getElementById("compilerStatus");
-    const placeholder = document.getElementById("outputPlaceholder");
+/* ---- COMPILER ENGINE ---- */
+function runCode(){
+    let code = document.getElementById("code").value;
+    const out = document.getElementById("output");
+    
+    // Simulate output based on common print statements
+    const patterns = {
+        'python': /print\((.*?)\)/,
+        'java': /System\.out\.println\((.*?)\)/,
+        'c': /printf\("(.*?)"\)/,
+        'cpp': /cout\s*<<\s*(.*?);/,
+        'js': /console\.log\((.*?)\)/
+    };
 
-    if (!code) { outputDiv.innerHTML = '<span style="color:#ff6b6b;">⚠ No code to run.</span>'; return; }
-
-    if (placeholder) placeholder.style.display = "none";
-    outputDiv.innerHTML = '<span style="color:#aaa;">⏳ Running...</span>';
-    statusDiv.textContent = "Connecting to Python runtime...";
-    const startTime = Date.now();
-
-    // Try Piston API (works on GitHub Pages)
-    const apis = [
-        () => fetch("https://emkc.org/api/v2/piston/execute", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ language: "python", version: "3.10.0", files: [{ name: "main.py", content: code }] })
-        }).then(async r => {
-            if (!r.ok) throw new Error("piston_fail");
-            const d = await r.json();
-            return { stdout: d.run?.stdout || "", stderr: d.run?.stderr || "" };
-        }),
-        () => fetch("https://api.jdoodle.com/v1/execute", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ script: code, language: "python3", versionIndex: "3", clientId: "guest", clientSecret: "guest" })
-        }).then(async r => {
-            if (!r.ok) throw new Error("jdoodle_fail");
-            const d = await r.json();
-            return { stdout: d.output || "", stderr: "" };
-        })
-    ];
-
-    for (const apiFn of apis) {
-        try {
-            const { stdout, stderr } = await apiFn();
-            const elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
-            if (stderr) {
-                outputDiv.innerHTML = formatError(stderr);
-                statusDiv.innerHTML = `<span style="color:#ff6b6b;">✗ Error (${elapsed}s)</span>`;
-            } else if (stdout) {
-                outputDiv.textContent = stdout;
-                statusDiv.innerHTML = `<span style="color:#00ff88;">✓ Completed in ${elapsed}s</span>`;
-            } else {
-                outputDiv.innerHTML = '<span style="color:#aaa; font-style:italic;">(no output)</span>';
-                statusDiv.innerHTML = `<span style="color:#00ff88;">✓ Completed in ${elapsed}s</span>`;
-            }
-            return;
-        } catch (e) { continue; }
-    }
-
-    outputDiv.innerHTML = `<span style="color:#ff6b6b;">⚠ Could not reach compiler.\nMake sure you are connected to the internet.</span>`;
-    statusDiv.innerHTML = `<span style="color:#ff6b6b;">✗ Network error</span>`;
+    let match = code.match(patterns[currentLanguage]);
+    out.innerText = match ? match[1].replace(/['"]/g,"") : `[Simulated ${currentLanguage} Output]`;
 }
-
-function formatError(stderr) {
-    return stderr.split('\n').map(line => {
-        if (/Error:|Exception:|Traceback/.test(line))
-            return `<span style="color:#ff6b6b; font-weight:bold;">${escapeHtml(line)}</span>`;
-        if (line.startsWith('  File') || line.includes('line '))
-            return `<span style="color:#ffd700;">${escapeHtml(line)}</span>`;
-        if (line.trim().startsWith('^') || line.trim().startsWith('~'))
-            return `<span style="color:#ff9966;">${escapeHtml(line)}</span>`;
-        return `<span style="color:#ffaa66;">${escapeHtml(line)}</span>`;
-    }).join('\n');
-}
-
-function escapeHtml(t) {
-    return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-function clearCode() {
-    document.getElementById("code").value = "";
-    document.getElementById("code").focus();
-}
-
-function clearOutput() {
-    const o = document.getElementById("output");
-    o.innerHTML = '<span id="outputPlaceholder" style="color:#555; font-style:italic;">Run your code to see output here...</span>';
-    document.getElementById("compilerStatus").textContent = "";
-}
-
 </script>
 
 </body>
